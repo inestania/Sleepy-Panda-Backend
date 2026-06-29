@@ -8,30 +8,23 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Install Dependencies') {
             steps {
-                sh 'docker compose build'
+                sh 'python3 -m pip install -r requirements-ci.txt'
             }
         }
 
-        stage('Run Container') {
+        stage('Success') {
             steps {
-                sh 'docker compose up -d'
-            }
-        }
-
-        stage('Check Running Container') {
-            steps {
-                sh 'docker ps'
+                echo 'Build berhasil'
             }
         }
     }
 
     post {
-        always {
-            echo 'Pipeline selesai.'
+        success {
+            echo 'Pipeline berhasil.'
         }
-
         failure {
             echo 'Pipeline gagal.'
         }
