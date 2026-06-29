@@ -1,0 +1,39 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker compose build'
+            }
+        }
+
+        stage('Run Container') {
+            steps {
+                sh 'docker compose up -d'
+            }
+        }
+
+        stage('Check Running Container') {
+            steps {
+                sh 'docker ps'
+            }
+        }
+    }
+
+    post {
+        always {
+            echo 'Pipeline selesai.'
+        }
+
+        failure {
+            echo 'Pipeline gagal.'
+        }
+    }
+}
