@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     stages {
+
         stage('Checkout') {
             steps {
                 checkout scm
@@ -10,7 +11,12 @@ pipeline {
 
         stage('Install Dependencies') {
             steps {
-                sh 'python3 -m pip install -r requirements-ci.txt'
+                sh '''
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    pip install --upgrade pip
+                    pip install -r requirements-ci.txt
+                '''
             }
         }
 
@@ -19,12 +25,14 @@ pipeline {
                 echo 'Build berhasil'
             }
         }
+
     }
 
     post {
         success {
             echo 'Pipeline berhasil.'
         }
+
         failure {
             echo 'Pipeline gagal.'
         }
