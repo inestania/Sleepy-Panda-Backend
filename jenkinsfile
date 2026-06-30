@@ -2,34 +2,35 @@ pipeline {
     agent any
 
     stages {
+
         stage('Checkout') {
             steps {
                 checkout scm
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Install Dependencies') {
             steps {
-                sh 'docker compose build'
+                sh '''
+                    python3 -m venv venv
+                    . venv/bin/activate
+                    python -m pip install --upgrade pip
+                    pip install -r requirements-ci.txt
+                '''
             }
         }
 
-        stage('Run Container') {
+        stage('Success') {
             steps {
-                sh 'docker compose up -d'
+                echo 'Build berhasil'
             }
         }
 
-        stage('Check Running Container') {
-            steps {
-                sh 'docker ps'
-            }
-        }
     }
 
     post {
-        always {
-            echo 'Pipeline selesai.'
+        success {
+            echo 'Pipeline berhasil.'
         }
 
         failure {

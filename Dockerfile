@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.6
-FROM python:3.12-slim AS base
+FROM python:3.10-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
@@ -12,6 +12,7 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt ./
+
 RUN pip install --upgrade pip \
     && pip install -r requirements.txt
 
